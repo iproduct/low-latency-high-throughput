@@ -1,6 +1,6 @@
 package simpletest;
 
-public class SingleThreadVolatileWriteCounter {
+public class SingleThreadVolatileCounter {
 	static volatile long counter = 0;
 
 	public static void main(String[] args) {
