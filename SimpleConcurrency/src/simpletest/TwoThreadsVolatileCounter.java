@@ -21,7 +21,7 @@ public class TwoThreadsVolatileCounter {
 		
 		long end = System.nanoTime();
 
-		System.out.println((end - start) / 1000000d + " ms"); // around 27000ms
+		System.out.println((end - start) / 1000000d + " ms"); // around 20000ms
 																// on my laptop
 																//  quad core i7@2.2GHz
 	}
