@@ -1,10 +1,6 @@
 package reactor;
 
-import reactor.Environment;
-import reactor.fn.Consumer;
 import reactor.rx.broadcast.Broadcaster;
-
-import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 
 public class EnvironmentProperties {
 	static {
@@ -32,6 +28,8 @@ public class EnvironmentProperties {
 		b.onNext("Goodbye World!");
 		// This will print
 		b.onNext("Hello Reactor!");
+		
+		b.accept("Hello Trayan");
 
 		// Must wait for tasks in other threads to complete
 		Thread.sleep(500);

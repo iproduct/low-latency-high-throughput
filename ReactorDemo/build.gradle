@@ -10,16 +10,61 @@ jar {
     }
 }
 
+apply plugin: 'osgi'
+apply plugin: 'groovy'
+
 ext {
-    reactorVersion = '2.0.3.RELEASE'
+    reactorVersion = '2.1.0.BUILD-SNAPSHOT'
+    
+    // Logging
+    slf4jVersion = '1.7.12'
+    logbackVersion = '1.1.2'
+
+    // Libraries
+    disruptorVersion = '3.3.2'
+    gsCollectionsVersion = '5.1.0'
+    nettyVersion = '4.0.27.Final'
+    jeromqVersion = '0.3.4'
+    jacksonDatabindVersion = '2.5.1'
+    jsonPathVersion = '2.0.0'
+    kryoVersion = '2.24.0'
+    protobufVersion = '2.6.1'
+    snappyVersion = '1.1.1.6'
+    hadoopVersion = '1.1.2'
+    openHftChronicleVersion = '3.4.2'
+    openHftLangVersion = '6.6.2'
+
+    // Testing
+    mockitoVersion = '1.10.19'
+    spockVersion = '0.7-groovy-2.0'
+
+	javadocLinks = [
+	      "http://docs.oracle.com/javase/7/docs/api/",
+	      "http://docs.oracle.com/javaee/6/api/",
+	      "http://fasterxml.github.io/jackson-databind/javadoc/2.5/",
+	      "http://www.goldmansachs.com/gs-collections/javadoc/5.1.0/",
+	      "http://www.reactive-streams.org/reactive-streams-tck-1.0.0-javadoc/"
+	] as String[]
+    
 }
 
+ext.bundleImportPackages = [
+      'org.zeromq;resolution:=optional',
+      'com.fasterxml.jackson.core;resolution:=optional',
+      'com.fasterxml.jackson.databind;resolution:=optional',
+      'com.fasterxml.jackson.module;resolution:=optional',
+      '*'
+  ]
+
 repositories {
+    mavenLocal()
     mavenCentral()
+    jcenter()
+    maven { url 'http://repo.spring.io/libs-milestone' }
+    maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     maven { url 'http://repo.spring.io/libs-release' } 
     // maven { url 'http://repo.spring.io/libs-milestone' } 
-    // maven { url 'http://repo.spring.io/libs-snapshot' } 
-    
+    // maven { url 'http://repo.spring.io/libs-snapshot' }     
 }
 
 dependencies {
@@ -30,11 +75,23 @@ dependencies {
     compile "io.projectreactor:reactor-stream:$reactorVersion"
 
     //Everything Routing (Event Bus)
-    //compile "io.projectreactor:reactor-bus:$reactorVersion"
+    compile "io.projectreactor:reactor-bus:$reactorVersion"
 
     //Everything Net
-    //compile "io.projectreactor:reactor-net:$reactorVersion"
-    //compile "io.netty:netty-all:4.0.27.final"
+    compile "io.projectreactor:reactor-net:$reactorVersion"
+    compile "io.netty:netty-all:$nettyVersion"
+
+    compile "org.zeromq:jeromq:$jeromqVersion",
+        "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
+
+    // Testing
+    testCompile "org.apache.hadoop:hadoop-client:$hadoopVersion",
+        "com.esotericsoftware.kryo:kryo:$kryoVersion"
+
+    testCompile "org.apache.httpcomponents:fluent-hc:4.3.6"
+
+    testRuntime "io.projectreactor:reactor-logback:$reactorVersion",
+        "org.slf4j:jcl-over-slf4j:$slf4jVersion"
 
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     testCompile group: 'junit', name: 'junit', version: '4.+'
