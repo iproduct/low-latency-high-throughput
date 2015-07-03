@@ -15,6 +15,7 @@ apply plugin: 'groovy'
 
 ext {
     reactorVersion = '2.1.0.BUILD-SNAPSHOT'
+    //reactorVersion = '2.0.3.RELEASE'
     
     // Logging
     slf4jVersion = '1.7.12'

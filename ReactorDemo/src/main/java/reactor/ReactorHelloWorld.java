@@ -9,7 +9,7 @@ public class ReactorHelloWorld {
 
     Broadcaster<String> sink = Broadcaster.create(Environment.get()); 
 
-    sink.dispatchOn(Environment.cachedDispatcher()) 
+    sink.dispatchOn(Environment.sharedDispatcher()) 
         .map(String::toUpperCase) 
         .filter(s -> s.startsWith("HELLO"))
         .consume(s -> System.out.printf("s=%s%n", s)); 
