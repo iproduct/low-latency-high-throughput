@@ -2,6 +2,7 @@ package grouper;
 
 import static grouper.utils.VehicleUtils.makeRandomVehicle;
 import grouper.controller.VehicleController;
+import grouper.controller.impl.inmemory.VehicleControllerConcurentHashMapImpl;
 import grouper.controller.impl.inmemory.VehicleControllerSyncListImpl;
 import grouper.task.TaskStatistics;
 import grouper.task.VehicleTask;
@@ -17,9 +18,9 @@ import java.util.concurrent.Executors;
 import javax.persistence.EntityExistsException;
 
 public class GrouperMainFuturesThreadPool {
-	final static int NUM_THREADS = Runtime.getRuntime().availableProcessors();
-	final static int INITIAL_DB_SIZE = 20000; //initially we start with 500000 Db records
-	final static long SIMULATION_DURATION_MS = 60000; //30 seconds
+	public final static int NUM_THREADS = Runtime.getRuntime().availableProcessors();
+	public final static int INITIAL_DB_SIZE = 20000; //initially we start with 500000 Db records
+	public final static long SIMULATION_DURATION_MS = 180000; //60 seconds
 	static long  recordsAdded = 0, recordsDeleted = 0, recordsUpdated = 0, 
 			getOperations = 0, bulkGetOperations = 0; 
 	static double operationsPerSecond = 0;
@@ -27,10 +28,11 @@ public class GrouperMainFuturesThreadPool {
 
 
 	public static void main(String[] args) {
-		VehicleController controller = new VehicleControllerSyncListImpl(2*INITIAL_DB_SIZE);
+		VehicleController controller = 
+				new  VehicleControllerConcurentHashMapImpl(2*INITIAL_DB_SIZE);
 		System.out.println("Filling DB with " + INITIAL_DB_SIZE + " records ...");
 		fillInitialRecords(controller, INITIAL_DB_SIZE);
-		ExecutorService exec = Executors.newCachedThreadPool();
+		ExecutorService exec = Executors.newFixedThreadPool(NUM_THREADS);
 		CompletionService<TaskStatistics> ecs = new ExecutorCompletionService<>(exec);
 		//submit tasks for concurrent execution
 		for (int i = 0; i < NUM_THREADS; i++){

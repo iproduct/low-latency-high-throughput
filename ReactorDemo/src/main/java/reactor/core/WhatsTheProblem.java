@@ -20,11 +20,11 @@ public class WhatsTheProblem {
 		Callable<T> t = new Callable<T>() { 
 
 		    public T call() {
+	            T result = callDatabase(sql); 
 		        synchronized(batches) { 
-		            T result = callDatabase(sql); 
-		            batches.add(result);
-		            return result;
+		            batches.add(result);    
 		        }
+		        return result;
 		    }
 
 			private T callDatabase(String sql) {

@@ -21,9 +21,9 @@
 jQuery(document).ready(function($){
     /* Global attributes */
     var rootUri = "http://" + (document.location.hostname.length > 0 ? document.location.hostname: "localhost") 
-        + ":" + (document.location.port.length > 0 ? document.location.port : "8080") + "/ipt-present";
+        + ":" + (document.location.port.length > 0 ? document.location.port : "80") + "/ipt-present";
     var rootWsUri = "ws://" + (document.location.hostname.length > 0 ? document.location.hostname: "localhost") 
-        + ":" + (document.location.port.length > 0 ? document.location.port : "8000") + "/wsdemo/ws";
+        + ":" + (document.location.port.length > 0 ? document.location.port : "80") + "/wsdemo/ws";
     var userName = "";   //the name of the currently logged user
     var sessionId = "";  //WebSocket session Id
     

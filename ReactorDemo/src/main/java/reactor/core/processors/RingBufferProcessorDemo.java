@@ -30,6 +30,7 @@ public class RingBufferProcessorDemo {
 		
 		p.onNext("One");
 		p.onNext("Two");
+		p.onNext("Three");
 		p.onComplete();
 		
 		Environment.terminate();

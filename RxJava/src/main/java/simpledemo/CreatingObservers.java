@@ -63,14 +63,17 @@ public class CreatingObservers {
 		o2.subscribe(System.out::println, 
 				ex -> ex.printStackTrace(), () -> System.out.println("Completed"));
 		
-		// Call customObservableBlocking()
-		System.out.println("\nBlocking:");
-		customObservableBlocking().subscribe(System.out::println, 
-				ex -> ex.printStackTrace(), () -> System.out.println("Completed"));
+//		// Call customObservableBlocking()
+//		System.out.println("\nBlocking:");
+//		customObservableBlocking().subscribe(System.out::println, 
+//				ex -> ex.printStackTrace(), () -> System.out.println("Completed"));
 
 		// Call customObservableAsync()
 		System.out.println("\nNon-Blocking:");
-		customObservableAsync().subscribe(System.out::println, 
+		Observable<String> o = customObservableAsync();
+		o.subscribe(s -> {System.out.println(s.toUpperCase());},
+				ex -> ex.printStackTrace(), () -> System.out.println("Completed"));
+		o.subscribe(System.out::println, 
 				ex -> ex.printStackTrace(), () -> System.out.println("Completed"));
 		
 		Thread.sleep(100); //wait async observable to complete

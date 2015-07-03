@@ -29,7 +29,8 @@ public class SharedDispatcherTimer {
 
 		//get the Timer bound to this environment
 		Timer timer = Environment.timer();
-		Pausable p = timer.schedule(time -> System.out.println(new Date(time)), 1, TimeUnit.SECONDS);
+		Pausable p = timer.schedule(time -> System.out.println(new Date(time)), 
+				1, TimeUnit.SECONDS);
 		
 		timer.submit(time -> {LOG.info("Cancelling timer task."); p.cancel();}, 
 				10, TimeUnit.SECONDS);

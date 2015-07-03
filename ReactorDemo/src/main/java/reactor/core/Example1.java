@@ -7,7 +7,7 @@ public class Example1 {
 
 	public static void main(String[] args) {
 		//Initialize context and get default dispatcher
-		Environment.initialize();
+		Environment.initializeIfEmpty();
 
 		//RingBufferDispatcher with 8192 slots by default
 		Dispatcher dispatcher = Environment.sharedDispatcher();

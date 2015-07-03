@@ -32,7 +32,7 @@ public class FetchWikipediaArticles {
 				try {
 					response1 = httpclient.execute(httpGet);
 		            try {
-		                System.out.println(response1.getStatusLine());
+//		                System.out.println(response1.getStatusLine());
 		                HttpEntity entity1 = response1.getEntity();
 		                // do something useful with the response body
 		                // and ensure it is fully consumed
@@ -56,7 +56,7 @@ public class FetchWikipediaArticles {
 		Pattern pattern = Pattern.compile("<title>(.*)</title>");
 		// Call fetchWikipediaArticleAsynchronously()
 		System.out.println("\nWiki Articles:");
-		fetchWikipediaArticleAsynchronously("Tiger", "Elephant")
+		fetchWikipediaArticleAsynchronously("Tiger", "Elephant", "Lion")
 			.flatMap(page -> Observable.from(page.split("\n")).limit(10).map(String::trim))
 			.filter(line ->  pattern.matcher(line).matches())
 			.map(line -> { Matcher m = pattern.matcher(line); m.matches(); return m.group(1);} )

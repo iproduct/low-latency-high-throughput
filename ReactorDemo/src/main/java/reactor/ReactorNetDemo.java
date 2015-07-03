@@ -24,9 +24,6 @@ public class ReactorNetDemo {
 		try {
 			setup();
 			env = Environment.get();
-			// get("/get/joe", httpServer.getListenAddress());
-			// post("/post", URLEncoder.encode("Reactor", "UTF8"),
-			// httpServer.getListenAddress());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -41,10 +38,9 @@ public class ReactorNetDemo {
 	private void setupServer() throws InterruptedException {
 		httpServer = NetStreams.<String, String>httpServer(server -> server
 				.codec(StandardCodecs.STRING_CODEC)
-				.listen("localhost", 8000)
+				.listen("localhost", 80)
 				.dispatcher(Environment.sharedDispatcher()));
 		httpServer.get("/wsdemo", getHandler());
-//		httpServer.post("/post", postHandler());
 		httpServer.ws("/wsdemo/ws", wsHandler());
 
 		httpServer.start().awaitSuccess();
@@ -62,15 +58,6 @@ public class ReactorNetDemo {
 							entry1 -> System.out.println(String.format(
 									"header [%s=>%s]", entry1.getKey(),
 									entry1.getValue())));
-//			channel.params()
-//					.entrySet()
-//					.forEach(
-//							entry2 -> System.out.println(String.format(
-//									"params [%s=>%s]", entry2.getKey(),
-//									entry2.getValue())));
-
-//			StringBuilder response = new StringBuilder().append("hello ")
-//					.append(channel.params().get("name"));
 			String response;
 			try {
 				response = getWebPage("src/main/java/webapp/ws.html");
@@ -102,51 +89,10 @@ public class ReactorNetDemo {
 //					channel.writeWith( s.reduce(0f, (prev, trade) -> (trade.getPrice() + prev) / 2).map(Object::toString) )
 //					);
 				StringBuilder response = new StringBuilder().append("hello WS\n");
-//						.append(channel.params().get("name"));
 				System.out.println(String.format("%s from thread %s",
 						response.toString(), Thread.currentThread()));
 				channel.capacity(1);
 				return channel.writeWith(Streams.just(response.toString()));
-//			channel.params()
-//					.entrySet()
-//					.forEach(
-//							entry2 -> System.out.println(String.format(
-//									"params [%s=>%s]", entry2.getKey(),
-//									entry2.getValue())));
-
-//			StringBuilder response = new StringBuilder().append("hello ")
-//					.append(channel.params().get("name"));
-		};
-	}
-
-	private ReactorChannelHandler<Buffer, Buffer, HttpChannel<Buffer, Buffer>> postHandler() {
-		return channel -> {
-
-			channel.headers()
-					.entries()
-					.forEach(
-							entry -> System.out.println(String.format(
-									"header [%s=>%s]", entry.getKey(),
-									entry.getValue())));
-
-			return channel
-					.writeWith(Streams
-							.wrap(channel)
-							.take(1)
-							.log("received")
-							.flatMap(
-									data -> {
-										final StringBuilder response = new StringBuilder()
-												.append("hello ").append(
-														new String(data
-																.asBytes()));
-										System.out.println(String.format(
-												"%s from thread %s",
-												response.toString(),
-												Thread.currentThread()));
-										return Streams.just(Buffer
-												.wrap(response.toString()));
-									}));
 		};
 	}
 
@@ -206,25 +152,6 @@ public class ReactorNetDemo {
 	public static void main(String... args) throws InterruptedException,
 			IOException {
 		ReactorNetDemo demoHttp = new ReactorNetDemo();
-//		System.out.println(demoHttp.getWebPage("src/main/java/webapp/ws.html"));
-		// Broadcaster<String> b = Broadcaster.create(env);
-		// b.dispatchOn(Environment.cachedDispatcher())
-		// .map(String::toUpperCase)
-		// .filter(s -> s.startsWith("HELLO"))
-		// .consume(s -> System.out.printf("s=%s%n", s));
-		//
-		//
-		//
-		//
-		// // Sink values into this Broadcaster
-		// b.onNext("Hello World!");
-		// // This won't print
-		// b.onNext("Goodbye World!");
-		// // This will print
-		// b.onNext("Hello Reactor!");
-		//
-		// b.accept("Hello Trayan");
-
 		// Must wait for tasks in other threads to complete
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Hit <Enter> to stop the server ...");

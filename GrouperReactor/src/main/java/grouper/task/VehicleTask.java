@@ -73,7 +73,7 @@ public class VehicleTask implements Callable<TaskStatistics> {
 					recordsDeleted++;
 					break;
 				case GET_50 : vehicleSeqNumber = VehicleUtils.getRandomLongNumber(controller.size()); 
-					controller.get(vehicleSeqNumber,1); 
+					controller.get(vehicleSeqNumber,50); 
 					bulkGetOperations++; 
 					break;
 				default: vehicleSeqNumber = VehicleUtils.getRandomLongNumber(controller.size()); 

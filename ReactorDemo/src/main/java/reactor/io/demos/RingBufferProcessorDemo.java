@@ -3,14 +3,14 @@ package reactor.io.demos;
 import java.util.List;
 
 import org.junit.Assert;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import reactor.Environment;
 import reactor.io.buffer.Buffer;
-import ch.qos.logback.classic.Logger;
 
 public class RingBufferProcessorDemo {
-	final static Logger LOG = (Logger) LoggerFactory
+	final static Logger LOG =  LoggerFactory
 			.getLogger(RingBufferProcessorDemo.class);
 
 	public static void main(String[] args) throws InterruptedException {
