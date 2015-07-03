@@ -23,7 +23,7 @@ public class ValueEventHandler1PMCSequenceSecond implements EventHandler<ValueEv
 	
 	public void onEvent(final ValueEvent event, final long sequence,
 			final boolean endOfBatch) throws Exception {
-		System.out.println(event.getValue());
+//		System.out.println(event.getValue());
 		int newValue = (int)(event.getValue()) - 1000;
 		valuesReceived.set(newValue);
 		if(newValue == Demo1PMCSequence.SAMPLES_SIZE - 1) { 
