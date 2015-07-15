@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 sourceCompatibility = 1.8
-version = '1.0'
+version = '1.1'
 jar {
     manifest {
         attributes 'Implementation-Title': 'Reactor Demo',
@@ -69,12 +69,11 @@ repositories {
     mavenLocal()
     mavenCentral()
     jcenter()
-    maven { url 'http://repo.spring.io/libs-milestone' }
+ //   maven { url 'http://repo.spring.io/libs-milestone' }
     maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     maven { url 'http://repo.spring.io/libs-release' } 
-    // maven { url 'http://repo.spring.io/libs-milestone' } 
-    // maven { url 'http://repo.spring.io/libs-snapshot' }   
     maven { url 'http://download.eclipse.org/rt/eclipselink/maven.repo/' } 
+    maven { url 'http://repo.spring.io/libs-snapshot' }
 }
 
 dependencies {
@@ -90,6 +89,9 @@ dependencies {
     //Everything Net
     compile "io.projectreactor:reactor-net:$reactorVersion"
     compile "io.netty:netty-all:$nettyVersion"
+    
+    //Logback high-performance logger
+    compile "io.projectreactor:reactor-logback:$reactorVersion"
 
     compile "org.zeromq:jeromq:$jeromqVersion",
         "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
@@ -128,3 +130,16 @@ uploadArchives {
 task hello << {
     println 'Hello world!'
 }
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+	manifest {
+        attributes 'Implementation-Title': 'IPT GrouperReactor Demo',  
+        	'Implementation-Version': version,
+        	'Main-Class': 'grouper.GrouperMain'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+

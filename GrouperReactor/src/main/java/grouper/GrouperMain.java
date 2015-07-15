@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Logger;
 
-public class GrouperMainFuturesThreadPool {
+public class GrouperMain {
 	public final static int NUM_THREADS = Runtime.getRuntime().availableProcessors();
 	public final static int INITIAL_DB_SIZE = 20000; //initially we start with 500000 Db records
 	public final static long WARMUP_DURATION_MS = 180000; //60 seconds

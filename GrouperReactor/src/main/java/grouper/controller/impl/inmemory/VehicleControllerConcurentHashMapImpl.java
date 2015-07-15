@@ -1,6 +1,6 @@
 package grouper.controller.impl.inmemory;
 
-import grouper.GrouperMainFuturesThreadPool;
+import grouper.GrouperMain;
 import grouper.controller.VehicleController;
 import grouper.model.Vehicle;
 
@@ -34,7 +34,7 @@ public class VehicleControllerConcurentHashMapImpl implements VehicleController 
 	
 	public VehicleControllerConcurentHashMapImpl(int size) {
 		vehicles = new ConcurrentHashMap<>(size, 0.75f, 
-				GrouperMainFuturesThreadPool.NUM_THREADS);
+				GrouperMain.NUM_THREADS);
 	}
 
 	@Override
