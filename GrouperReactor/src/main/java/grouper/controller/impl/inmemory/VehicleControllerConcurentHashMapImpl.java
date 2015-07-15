@@ -6,8 +6,6 @@ import grouper.model.Vehicle;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,9 +16,17 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+
 public class VehicleControllerConcurentHashMapImpl implements VehicleController {
 	private final Map<Long, Vehicle> vehicles;
 	private static AtomicLong count = new AtomicLong(0);
+	final static Logger LOG = (Logger) LoggerFactory
+			.getLogger(VehicleControllerConcurentHashMapImpl.class);
+
 	
 	protected long getNextId() {
 		return count.incrementAndGet();
@@ -37,6 +43,15 @@ public class VehicleControllerConcurentHashMapImpl implements VehicleController 
 			throw new EntityExistsException("The vehicle with plate number " + vehicle.getNumber() + " already exists in DB." );
 		vehicle.setId(getNextId());
 		vehicles.put(vehicle.getId(), vehicle);
+		String number = vehicle.getNumber();
+//		if(LOG.isEnabledFor(Level.TRACE)){
+//			Optional<Vehicle> vehicleOrNull = getByPlateNumber(number);
+//			LOG.trace("Vehicle [{}] has GPS number : {}", number, 
+//					vehicleOrNull.isPresent() ?  vehicleOrNull.get().getGpsNumber(): "none");
+//		}
+//		LOG.trace("Vehicle [{}] has GPS number : {}", number, 
+//			getByPlateNumber(number).isPresent() ? getByPlateNumber(number).get().getGpsNumber(): "none");
+
 	}
 
 	@Override
@@ -60,7 +75,7 @@ public class VehicleControllerConcurentHashMapImpl implements VehicleController 
 
 	@Override
 	public Optional<Vehicle> getByPlateNumber(String plateNumber) {
-		
+//		LOG.info("In getByPlateNumber()");
 			return vehicles.values().stream()
 					.filter(vehicle -> vehicle.getNumber().equalsIgnoreCase(plateNumber))
 					.findAny();
