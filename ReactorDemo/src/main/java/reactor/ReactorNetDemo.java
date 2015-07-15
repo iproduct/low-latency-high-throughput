@@ -7,23 +7,36 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.LoggerContext;
+import reactor.bus.EventBus;
+import reactor.fn.timer.Timer;
+import reactor.fn.tuple.Tuple2;
 import reactor.io.buffer.Buffer;
 import reactor.io.codec.StandardCodecs;
 import reactor.io.net.NetStreams;
 import reactor.io.net.ReactorChannelHandler;
 import reactor.io.net.http.HttpChannel;
 import reactor.io.net.http.HttpServer;
+import reactor.quickstart.TradeServer;
 import reactor.rx.Streams;
 
 public class ReactorNetDemo {
 	private HttpServer<String, String> httpServer;
 	private Environment env;
+	private Timer timer;
+	TradeServer server;
+	EventBus serverReactor;
+//	Selector tradeExecute;
 
 	public ReactorNetDemo() {
 		try {
 			setup();
 			env = Environment.get();
+			timer = env.getTimer();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -32,7 +45,25 @@ public class ReactorNetDemo {
 
 	public void setup() throws InterruptedException {
 		Environment.initializeIfEmpty().assignErrorJournal();
+
+//		server = new TradeServer();
+//
+//		// Use a Reactor to dispatch events using the high-speed Dispatcher
+//		serverReactor = EventBus.create(Environment.get());
+//
+//		// Create a single key and Selector for efficiency
+//		tradeExecute = Selectors.object("trade.execute");
+//
+//		// For each Trade event, execute that on the server and notify connected clients
+//		// because each client that connects links to the serverReactor
+//		serverReactor.on(tradeExecute, (Event<Trade> ev) -> {
+//			server.execute(ev.getData());
+//
+//		});
+
+		
 		setupServer();
+		
 	}
 
 	private void setupServer() throws InterruptedException {
@@ -48,6 +79,8 @@ public class ReactorNetDemo {
 
 	public void teardown() throws InterruptedException {
 		httpServer.shutdown().await();
+		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+		loggerContext.stop();
 	}
 
 	private ReactorChannelHandler<String, String, HttpChannel<String, String>> getHandler() {
@@ -88,13 +121,43 @@ public class ReactorNetDemo {
 //					flatMap(s ->
 //					channel.writeWith( s.reduce(0f, (prev, trade) -> (trade.getPrice() + prev) / 2).map(Object::toString) )
 //					);
-				StringBuilder response = new StringBuilder().append("hello WS\n");
-				System.out.println(String.format("%s from thread %s",
-						response.toString(), Thread.currentThread()));
-				channel.capacity(1);
-				return channel.writeWith(Streams.just(response.toString()));
+//				StringBuilder response = new StringBuilder().append("hello WS\n");
+//				System.out.println(String.format("%s from thread %s",
+//						response.toString(), Thread.currentThread()));
+////				channel.capacity(1);
+//				return Streams.wrap(serverReactor.on(tradeExecute)).
+//						map(ev -> ev.getData()).
+//						cast(Trade.class).
+//						window(1000).
+//						flatMap(s ->
+//						channel.writeWith( s.reduce(0f, (prev, trade) -> 
+//							(trade.getPrice() + prev) / 2).map(Object::toString) )
+//						);
+			return Streams.from(new String[]{"Hello", "from", "Reactor", "Websocket"})
+				.throttle(2000).flatMap(str -> channel.writeWith(Streams.just(str)));
 		};
 	}
+//				System.out.println("Connect websocket clients now (waiting for 10 seconds).\n"
+//						+ "Open websocket/src/main/webapp/ws.html in a browser...");
+//				Thread.sleep(10000);
+
+				// Start a throughput timer
+//				startTimer();
+
+//				// Publish one event per trade
+//				for (int i = 0; i < 10000000; i++) {
+//					// Pull next randomly-generated Trade from server
+//					Trade t = server.nextTrade();
+//
+//					// Notify the Reactor the event is ready to be handled
+//					serverReactor.notify(tradeExecute.getObject(), Event.wrap(t));
+//				}
+
+				// Stop throughput timer and output metrics
+//				endTimer();
+
+//				server.stop();
+
 
 	private void get(String path, SocketAddress address) {
 		try {
@@ -159,6 +222,7 @@ public class ReactorNetDemo {
 		System.out.println("Stopping the HTTP server ...");
 		demoHttp.teardown();
 		System.out.println("HTTP server stopped successfully.");
+		
 
 	}
 }
