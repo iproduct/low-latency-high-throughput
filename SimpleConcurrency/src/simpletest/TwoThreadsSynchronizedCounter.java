@@ -10,7 +10,7 @@ public class TwoThreadsSynchronizedCounter {
 		for (int j = 0; j < 10; j++) {
 			Thread second = new Thread(() -> {
 				long value = 0;
-				while (value < 500000000) {
+				while (value < 500000000L) {
 					synchronized (monitor) {
 						value = counter++;
 					}
