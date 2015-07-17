@@ -113,50 +113,11 @@ public class ReactorNetDemo {
 					.forEach(
 							entry1 -> System.out.println(String.format(
 									"header [%s=>%s]", entry1.getKey(),
-									entry1.getValue())));
-//				return Streams.wrap(serverReactor.on(tradeExecute)).
-//					map(ev -> ev.getData()).
-//					cast(Trade.class).
-//					window(1000).
-//					flatMap(s ->
-//					channel.writeWith( s.reduce(0f, (prev, trade) -> (trade.getPrice() + prev) / 2).map(Object::toString) )
-//					);
-//				StringBuilder response = new StringBuilder().append("hello WS\n");
-//				System.out.println(String.format("%s from thread %s",
-//						response.toString(), Thread.currentThread()));
-////				channel.capacity(1);
-//				return Streams.wrap(serverReactor.on(tradeExecute)).
-//						map(ev -> ev.getData()).
-//						cast(Trade.class).
-//						window(1000).
-//						flatMap(s ->
-//						channel.writeWith( s.reduce(0f, (prev, trade) -> 
-//							(trade.getPrice() + prev) / 2).map(Object::toString) )
-//						);
+									entry1.getValue())));		
 			return Streams.from(new String[]{"Hello", "from", "Reactor", "Websocket"})
 				.throttle(2000).flatMap(str -> channel.writeWith(Streams.just(str)));
 		};
 	}
-//				System.out.println("Connect websocket clients now (waiting for 10 seconds).\n"
-//						+ "Open websocket/src/main/webapp/ws.html in a browser...");
-//				Thread.sleep(10000);
-
-				// Start a throughput timer
-//				startTimer();
-
-//				// Publish one event per trade
-//				for (int i = 0; i < 10000000; i++) {
-//					// Pull next randomly-generated Trade from server
-//					Trade t = server.nextTrade();
-//
-//					// Notify the Reactor the event is ready to be handled
-//					serverReactor.notify(tradeExecute.getObject(), Event.wrap(t));
-//				}
-
-				// Stop throughput timer and output metrics
-//				endTimer();
-
-//				server.stop();
 
 
 	private void get(String path, SocketAddress address) {
