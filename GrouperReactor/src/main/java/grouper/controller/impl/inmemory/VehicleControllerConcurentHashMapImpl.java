@@ -44,11 +44,11 @@ public class VehicleControllerConcurentHashMapImpl implements VehicleController 
 		vehicle.setId(getNextId());
 		vehicles.put(vehicle.getId(), vehicle);
 		String number = vehicle.getNumber();
-//		if(LOG.isEnabledFor(Level.TRACE)){
-//			Optional<Vehicle> vehicleOrNull = getByPlateNumber(number);
-//			LOG.trace("Vehicle [{}] has GPS number : {}", number, 
-//					vehicleOrNull.isPresent() ?  vehicleOrNull.get().getGpsNumber(): "none");
-//		}
+		if(LOG.isEnabledFor(Level.TRACE)){
+			Optional<Vehicle> vehicleOrNull = getByPlateNumber(number);
+			LOG.trace("Vehicle [{}] has GPS number : {}", number, 
+					vehicleOrNull.isPresent() ?  vehicleOrNull.get().getGpsNumber(): "none");
+		}
 //		LOG.trace("Vehicle [{}] has GPS number : {}", number, 
 //			getByPlateNumber(number).isPresent() ? getByPlateNumber(number).get().getGpsNumber(): "none");
 
