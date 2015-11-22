@@ -28,7 +28,7 @@ import reactor.rx.Stream;
 import reactor.rx.Streams;
 import reactor.rx.broadcast.Broadcaster;
 
-public class ReactorNetDemo {
+public class ReactorWishesWS {
 	private HttpServer<String, String> httpServer;
 	private Environment env;
 	private Timer timer;
@@ -53,7 +53,7 @@ public class ReactorNetDemo {
 	
 //	Selector tradeExecute;
 
-	public ReactorNetDemo() {
+	public ReactorWishesWS() {
 		try {
 			setup();
 			env = Environment.get();
@@ -72,23 +72,6 @@ public class ReactorNetDemo {
 
 	public void setup() throws InterruptedException {
 		Environment.initializeIfEmpty().assignErrorJournal();
-
-//		server = new TradeServer();
-//
-//		// Use a Reactor to dispatch events using the high-speed Dispatcher
-//		serverReactor = EventBus.create(Environment.get());
-//
-//		// Create a single key and Selector for efficiency
-//		tradeExecute = Selectors.object("trade.execute");
-//
-//		// For each Trade event, execute that on the server and notify connected clients
-//		// because each client that connects links to the serverReactor
-//		serverReactor.on(tradeExecute, (Event<Trade> ev) -> {
-//			server.execute(ev.getData());
-//
-//		});
-
-		
 		setupServer();
 		
 	}
@@ -140,16 +123,12 @@ public class ReactorNetDemo {
 					.forEach(
 							entry1 -> System.out.println(String.format(
 									"header [%s=>%s]", entry1.getKey(),
-									entry1.getValue())));	
-					
-			
-			
+									entry1.getValue())));				
 			channel.consume(		
 				s -> {
 				System.out.printf("%s greeting = %s%n", Thread.currentThread(), s);
 				channelBroadcaster.onNext(s);
 				String[] parts = s.split(":");
-//				System.out.println(Arrays.toString(parts));
 				if(parts.length == 2) {
 					switch(parts[0]) {    //Command part
 						case "+1" : wishPlusOne(parts[1]);  //Data part
@@ -171,18 +150,6 @@ public class ReactorNetDemo {
 								})
 						).map(x -> {System.out.println("TO BE SENT: " + x); return x;})
 					));
-//			return Streams.from(new String[]{"Hello", "from", "Reactor", "Websocket"})
-//					.throttle(10000).flatMap(str -> channel.writeWith(
-//						Streams.just(
-//							wishes.entrySet().stream()
-//								.map(entry -> entry.getKey() + ":" + entry.getValue())
-//								.reduce("", (acum, val) -> {
-//									return (acum.length() > 0) ? acum + "," + val : val;
-//								})
-//						).map(x -> {System.out.println("TO BE SENT: " + x); return x;})
-//					));
-////			return Streams.from(new String[]{"Hello", "from", "Reactor", "Websocket"})
-//					.throttle(20000).flatMap(str -> channel.writeWith(Streams.just(str)));
 		};
 	}
 
@@ -197,52 +164,6 @@ public class ReactorNetDemo {
 		System.out.println(wishes);
 	}
 
-	private void get(String path, SocketAddress address) {
-		try {
-			StringBuilder request = new StringBuilder()
-					.append(String.format("GET %s HTTP/1.1\r\n", path))
-					.append("Connection: Keep-Alive\r\n").append("\r\n");
-			java.nio.channels.SocketChannel channel = java.nio.channels.SocketChannel
-					.open(address);
-			System.out.println(String.format("get: request >> [%s]",
-					request.toString()));
-			channel.write(Buffer.wrap(request.toString()).byteBuffer());
-			ByteBuffer buf = ByteBuffer.allocate(4 * 1024);
-			while (channel.read(buf) > -1)
-				;
-			String response = new String(buf.array());
-			System.out.println(String.format("get: << Response: %s", response));
-			channel.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void post(String path, String data, SocketAddress address) {
-		try {
-			StringBuilder request = new StringBuilder().append(
-					String.format("POST %s HTTP/1.1\r\n", path)).append(
-					"Connection: Keep-Alive\r\n");
-			request.append(
-					String.format("Content-Length: %s\r\n", data.length()))
-					.append("\r\n").append(data).append("\r\n");
-			java.nio.channels.SocketChannel channel = java.nio.channels.SocketChannel
-					.open(address);
-			System.out.println(String.format("post: request >> [%s]",
-					request.toString()));
-			channel.write(Buffer.wrap(request.toString()).byteBuffer());
-			ByteBuffer buf = ByteBuffer.allocate(4 * 1024);
-			while (channel.read(buf) > -1)
-				;
-			String response = new String(buf.array());
-			System.out
-					.println(String.format("post: << Response: %s", response));
-			channel.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	private String getWebPage(String fileName) throws IOException{
 		StringBuilder sb = new StringBuilder();
 		Path filePath = Paths.get(fileName);
@@ -252,7 +173,7 @@ public class ReactorNetDemo {
 
 	public static void main(String... args) throws InterruptedException,
 			IOException {
-		ReactorNetDemo demoHttp = new ReactorNetDemo();
+		ReactorWishesWS demoHttp = new ReactorWishesWS();
 		// Must wait for tasks in other threads to complete
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Hit <Enter> to stop the server ...");
