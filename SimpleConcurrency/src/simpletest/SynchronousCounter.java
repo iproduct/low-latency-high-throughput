@@ -13,6 +13,7 @@ public class SynchronousCounter {
 		//Real benchmark
 		counter = testIncrement(counter);
 		long end = System.nanoTime();
+		System.out.println("Warmed up counter: " + counter); 
 
 		System.out.println((end - start) / 1000000d  + " ms"); //around 190ms on my laptop quad core i7@2.2GHz
 	}
