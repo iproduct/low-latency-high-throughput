@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IPT Reactive WebSocket Demo - Angular 2 </title>
+    <script src="node_modules/systemjs/dist/system.js"></script>
+    <script src="node_modules/angular2/bundles/angular2.min.js"></script>
+    <!--[if lt IE 9]><script type="text/javascript" src="app/excanvas.js"></script><![endif]-->
+    <script src="app/jquery-1.11.3.min.js"></script>
+    <script src="app/tagcanvas.min.js"></script>
+    <script src="app/jquery.tagcanvas.min.js"></script>
+    <script src="app/tagcloud.js"></script>
+    <script>
+      System.config({
+        map: {
+          'rxjs' : '../node_modules/rxjs'
+        },
+        packages: {
+          'app': {defaultExtension: 'js'},
+          'rxjs' : { 
+            defaultExtension: 'js'
+          }
+        }
+      });
+      System.import('app/app5');
+    </script>
+  </head>
+  <body>
+    <display>loading...</display>
+    <div id="myCanvasContainer">
+     <canvas width="400" height="400" id="myCanvas">
+      <p>Anything in here will be replaced on browsers that support the canvas element</p>
+      <ul id="tagList">
+       <li><a href="http://www.google.com" target="_blank">Google</a></li>
+       <li><a href="/fish">Fish</a></li>
+       <li><a href="/chips">Chips</a></li>
+       <li><a href="/salt">Salt</a></li>
+       <li><a href="/vinegar">Vinegar</a></li>
+      </ul>
+     </canvas>
+    </div>
+  </body>
+</html>
